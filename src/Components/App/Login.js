@@ -1,40 +1,41 @@
-import React from 'react'
-import { instance } from '../../Axios/axiosConfig'
-import { useState } from 'react'
-import { setCookie } from '../../Axios/cookieConfig'
-import { setToken } from '../../Axios/axiosConfig'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { instance, setFormToken } from "../../Axios/axiosConfig";
+import { useState } from "react";
+import { setCookie } from "../../Axios/cookieConfig";
+import { setToken } from "../../Axios/axiosConfig";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const search = async () => {
     try {
-      const res = await instance.post('/login', {
+      const res = await instance.post("/login", {
         email: email,
         password: password,
-      })
-      const jwt = res.data.token
+      });
+      const jwt = res.data.token;
       // console.log(jwt)
-      setCookie('token', jwt)
-      setToken(jwt)
+      setCookie("token", jwt);
+      setToken(jwt);
+      setFormToken(jwt);
       if (jwt) {
-        navigate('/')
+        navigate("/");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const onSubmits = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!email) {
-      alert('not email')
+      alert("not email");
     }
-    search()
-  }
+    search();
+  };
 
   return (
     <div>
@@ -65,7 +66,7 @@ const Login = () => {
                     id='email'
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value)
+                      setEmail(e.target.value);
                     }}
                     className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500'
                     placeholder='name@company.com'
@@ -85,7 +86,7 @@ const Login = () => {
                     id='password'
                     value={password}
                     onChange={(e) => {
-                      setPassword(e.target.value)
+                      setPassword(e.target.value);
                     }}
                     placeholder='••••••••'
                     className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500'
@@ -124,7 +125,7 @@ const Login = () => {
                   Login
                 </button>
                 <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
-                  Don’t have an account yet?{' '}
+                  Don’t have an account yet?{" "}
                   <a
                     href='/register'
                     className='font-medium text-primary-600 hover:underline dark:text-primary-500 text-red-400'
@@ -138,7 +139,7 @@ const Login = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
