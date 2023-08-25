@@ -6,6 +6,7 @@ import Register from './Components/App/Register'
 import Login from './Components/App/Login'
 import UploadPdf from './Pages/UploadPdf'
 import Protected from './Components/App/Protected'
+import GetMyPdf from './Pages/GetMyPdf'
 function App() {
   return (
     <>
@@ -18,7 +19,7 @@ function App() {
           path='/uploadPdf'
           element={<Protected Component={UploadPdf} />}
         />
-
+        <Route path='/getMyPdf' element={<Protected Component={GetMyPdf} />} />
         <Route path='*' element={<NoPage />} />
       </Routes>
     </>
