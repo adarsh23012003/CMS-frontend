@@ -1,41 +1,57 @@
-import React from "react";
-import { instance, setFormToken } from "../../Axios/axiosConfig";
-import { useState } from "react";
-import { setCookie } from "../../Axios/cookieConfig";
-import { setToken } from "../../Axios/axiosConfig";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { instance, setFormToken } from '../../Axios/axiosConfig'
+import { useState } from 'react'
+import { setCookie } from '../../Axios/cookieConfig'
+import { setToken } from '../../Axios/axiosConfig'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [captcha, setCaptcha] = useState('')
+  const [inputCaptcha, setInputCaptcha] = useState('')
 
   const search = async () => {
     try {
-      const res = await instance.post("/login", {
+      const res = await instance.post('/login', {
         email: email,
         password: password,
-      });
-      const jwt = res.data.token;
-      // console.log(jwt)
-      setCookie("token", jwt);
-      setToken(jwt);
-      setFormToken(jwt);
+        captcha: captcha,
+      })
+      const jwt = res.data.token
+      setCookie('token', jwt)
+      setToken(jwt)
+      setFormToken(jwt)
       if (jwt) {
-        navigate("/");
+        navigate('/')
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
-  const onSubmits = (e) => {
-    e.preventDefault();
-    if (!email) {
-      alert("not email");
+  useEffect(() => {
+    function getCaptcha() {
+      instance
+        .get('/captcha')
+        .then((res) => {
+          setCaptcha(res.data.captcha)
+          // console.log(res.data.captcha)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
-    search();
-  };
+    getCaptcha()
+  }, [])
+  const onSubmits = (e) => {
+    e.preventDefault()
+    if (!email) {
+      alert('not email')
+    }
+    search()
+  }
 
   return (
     <div>
@@ -66,7 +82,7 @@ const Login = () => {
                     id='email'
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setEmail(e.target.value)
                     }}
                     className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500'
                     placeholder='name@company.com'
@@ -86,12 +102,30 @@ const Login = () => {
                     id='password'
                     value={password}
                     onChange={(e) => {
-                      setPassword(e.target.value);
+                      setPassword(e.target.value)
                     }}
                     placeholder='••••••••'
                     className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500'
                     required=''
                   />
+                  {/* ********************** */}
+                  <div className='flex justify-center items-start gap-2 mt-5'>
+                    <div className='bg-gray-50 border border-gray-300 text-gray-900 font-bold text-center  sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-48 p-2.5 dark:border-gray-600 '>
+                      {captcha && captcha}
+                    </div>
+                    <div className=''>
+                      <input
+                        type='text'
+                        value={inputCaptcha}
+                        onChange={(e) => {
+                          setInputCaptcha(e.target.value.trim())
+                        }}
+                        placeholder='Enter captcha'
+                        className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 '
+                        required=''
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-start'>
@@ -125,7 +159,7 @@ const Login = () => {
                   Login
                 </button>
                 <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
-                  Don’t have an account yet?{" "}
+                  Don’t have an account yet?{' '}
                   <a
                     href='/register'
                     className='font-medium text-primary-600 hover:underline dark:text-primary-500 text-red-400'
@@ -139,7 +173,7 @@ const Login = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
